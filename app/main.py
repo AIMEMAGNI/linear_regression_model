@@ -32,8 +32,7 @@ def predict(data: TVData):
         encoded_data = [
             label_encoders['Brand'].transform([data.Brand])[0],
             label_encoders['Resolution'].transform([data.Resolution])[0],
-            label_encoders['Operating System'].transform(
-                [data.Operating_System])[0]
+            label_encoders['Operating System'].transform([data.Operating_System])[0]
         ]
         features = encoded_data + [data.Size]
         features_poly = poly.transform([features])
@@ -41,7 +40,14 @@ def predict(data: TVData):
         prediction = model.predict(scaled_features)
         return {"predicted_price": prediction[0]}
     except KeyError as e:
-        raise HTTPException(
-            status_code=400, detail=f"Missing or invalid feature: {e}")
+        raise HTTPException(status_code=400, detail=f"Missing or invalid feature: {e}")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the TV price prediction API!"}
+
+@app.get("/predict")
+def predict_get():
+    raise HTTPException(status_code=405, detail="Method Not Allowed. Use POST request.")
