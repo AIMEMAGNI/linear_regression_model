@@ -52,7 +52,8 @@ def predict(data: TVData):
         features_poly = poly.transform([features])
         scaled_features = scaler.transform(features_poly)
         prediction = model.predict(scaled_features)
-        return {"predicted_price": prediction[0]}
+        positive_prediction = abs(prediction[0])
+        return {"predicted_price": positive_prediction}
     except KeyError as e:
         raise HTTPException(
             status_code=400, detail=f"Missing or invalid feature: {e}")
