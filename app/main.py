@@ -2,8 +2,18 @@ import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import joblib
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Define the paths
 model_path = os.path.join('app', 'linear_regression_model.pkl')
