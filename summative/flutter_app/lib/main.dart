@@ -52,6 +52,9 @@ class _PricePredictionScreenState extends State<PricePredictionScreen> {
       isLoading = true;
     });
 
+    // Dismiss the keyboard
+    FocusScope.of(context).unfocus();
+
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -67,8 +70,9 @@ class _PricePredictionScreenState extends State<PricePredictionScreen> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
+          double predictedPrice = data['predicted_price'];
           predictionResult =
-              'Predicted Price: \$${data['predicted_price'].toStringAsFixed(2)}';
+              'Predicted Price: \$${predictedPrice.abs().toStringAsFixed(2)}';
         });
       } else {
         setState(() {
@@ -92,40 +96,43 @@ class _PricePredictionScreenState extends State<PricePredictionScreen> {
       appBar: AppBar(
         title: Text('TV Price Predictor'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: brandController,
-              decoration: InputDecoration(labelText: 'Brand'),
-            ),
-            TextField(
-              controller: resolutionController,
-              decoration: InputDecoration(labelText: 'Resolution'),
-            ),
-            TextField(
-              controller: sizeController,
-              decoration: InputDecoration(labelText: 'Size'),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: operatingSystemController,
-              decoration: InputDecoration(labelText: 'Operating System'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: isLoading ? null : predictPrice,
-              child: isLoading ? CircularProgressIndicator() : Text('Predict'),
-            ),
-            SizedBox(height: 20),
-            Text(
-              predictionResult,
-              style: TextStyle(fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: brandController,
+                decoration: InputDecoration(labelText: 'Brand'),
+              ),
+              TextField(
+                controller: resolutionController,
+                decoration: InputDecoration(labelText: 'Resolution'),
+              ),
+              TextField(
+                controller: sizeController,
+                decoration: InputDecoration(labelText: 'Size'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: operatingSystemController,
+                decoration: InputDecoration(labelText: 'Operating System'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: isLoading ? null : predictPrice,
+                child:
+                    isLoading ? CircularProgressIndicator() : Text('Predict'),
+              ),
+              SizedBox(height: 20),
+              Text(
+                predictionResult,
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
