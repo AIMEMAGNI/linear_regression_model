@@ -5,11 +5,12 @@ This repository contains a TV Price Prediction project that consists of three ma
 
 ## Project Structure
 
+```
 summative/
 ├── API/
 ├── flutter_app/
 └── linear_regression/
-
+```
 
 ### 1. API
 
